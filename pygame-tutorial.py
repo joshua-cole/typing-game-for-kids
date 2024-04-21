@@ -78,6 +78,8 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
 
+# Define the cloud object by extending pygame.sprite.Sprite
+# Use an image for a better-looking sprite
 class Cloud(pygame.sprite.Sprite):
     def __init__(self):
         super(Cloud, self).__init__()
@@ -86,13 +88,13 @@ class Cloud(pygame.sprite.Sprite):
         # The starting position is randomly generated
         self.rect = self.surf.get_rect(
             center=(
-                random.randint(SCREEN_WIDTH + 20, SCREEN_HEIGHT + 100),
+                random.randint(SCREEN_WIDTH + 20, SCREEN_WIDTH + 100),
                 random.randint(0, SCREEN_HEIGHT),
             )
         )
 
-    # Move cloud based on a constant speed
-    # Remove the cloud when it pass the left edge of the screen
+    # Move the cloud based on a constant speed
+    # Remove the cloud when it passes the left edge of the screen
     def update(self):
         self.rect.move_ip(-5, 0)
         if self.rect.right < 0:
@@ -101,6 +103,9 @@ class Cloud(pygame.sprite.Sprite):
 # Create the screen object
 # The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# Setup the clock for a decent framerate
+clock = pygame.time.Clock()
 
 # Create a custom event for adding a new enemy and a cloud
 ADDENEMY = pygame.USEREVENT + 1
@@ -174,3 +179,6 @@ while running:
 
     # Update the display
     pygame.display.flip()
+
+    # Ensure the game maintains a framerate of 30 frames per second
+    clock.tick(30)
