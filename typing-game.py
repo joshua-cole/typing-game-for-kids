@@ -19,32 +19,52 @@ from pygame.locals import (
 pygame.init()
 
 # Establish screen size
-screenHeight = 500
-screenWidth = 500
+screenWidth = 800
+screenHeight = 600
 
 # Colors to be used
 white = (255,255,255)
 blue = (0,0,255)
+black = (0,0,0)
 
 # Set up the drawing window
-screen = pygame.display.set_mode([500, 500])
+screen = pygame.display.set_mode((screenWidth, screenHeight))
 
-# Run until the user asks to quit
+# Variable to keep the main loop running
 running = True
-while running:
 
-    # Did the user click the window close button?
+# Main loop
+while running:
+    # Look at every event in the queue
     for event in pygame.event.get():
+        # Did the user hit a key?
+        if event.type == KEYDOWN:
+            # Was it the escape key?  If so, stop the loop.
+            if event.key == K_ESCAPE:
+                running = False
+
+        # Did the user click the window close button?  If so, stop the loop.
         if event.type == pygame.QUIT:
             running = False
     
     # Fill the background with white
     screen.fill((255,255,255))
 
-    # Draw a solid blue circle in the center
-    pygame.draw.circle(screen, blue, (screenHeight/2,screenWidth/2), 75)
+    # Create a surface and pass in a tuple containing its length and width
+    surf = pygame.Surface((50,50))
 
-    # Flip the display
+    # Give the surface a color to separate it from the background
+    surf.fill(black)
+    rect = surf.get_rect()
+
+    # Put the center of surf at the center of the display
+    surf_center = (
+        (screenWidth-surf.get_width())/2,
+        (screenHeight-surf.get_height()),2
+    )
+
+    # This line says "Draw surf onto the screen at the center"
+    screen.blit(surf, surf_center)
     pygame.display.flip()
 
 # Done! Time to quit
