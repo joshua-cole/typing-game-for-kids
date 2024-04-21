@@ -60,7 +60,7 @@ while running:
     # Put the center of surf at the center of the display
     surf_center = (
         (screenWidth-surf.get_width())/2,
-        (screenHeight-surf.get_height()),2
+        (screenHeight-surf.get_height())/2
     )
 
     # This line says "Draw surf onto the screen at the center"
