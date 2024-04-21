@@ -14,6 +14,7 @@ from pygame.locals import (
     KEYDOWN,
     QUIT,
 )
+from pygame.sprite import _Group
 
 # Initialize pygame
 pygame.init()
@@ -30,6 +31,17 @@ black = (0,0,0)
 # Set up the drawing window
 screen = pygame.display.set_mode((screenWidth, screenHeight))
 
+# Define a player object by extending pygame.sprite.Sprite
+# The surface that is drawn on the screen is now an attribute of 'player'
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Player, self).__init__()
+        self.surf = pygame.Surface((75, 25))
+        self.surf.fill(white)
+        self.rect = self.surf.get_rect()
+
+# Initiate player.  Right now, it's just a rectangle
+player = Player()
 # Variable to keep the main loop running
 running = True
 
@@ -47,24 +59,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     
-    # Fill the background with white
-    screen.fill((255,255,255))
+    # Fill the background with black
+    screen.fill(black)
 
-    # Create a surface and pass in a tuple containing its length and width
-    surf = pygame.Surface((50,50))
-
-    # Give the surface a color to separate it from the background
-    surf.fill(black)
-    rect = surf.get_rect()
-
-    # Put the center of surf at the center of the display
-    surf_center = (
-        (screenWidth-surf.get_width())/2,
-        (screenHeight-surf.get_height())/2
-    )
-
-    # This line says "Draw surf onto the screen at the center"
-    screen.blit(surf, surf_center)
+    # Draw the player on the screen
+    screen.blit(player.surf, (screenWidth/2,screenHeight/2))
     pygame.display.flip()
 
 # Done! Time to quit
