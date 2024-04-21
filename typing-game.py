@@ -14,7 +14,6 @@ from pygame.locals import (
     KEYDOWN,
     QUIT,
 )
-from pygame.sprite import _Group
 
 # Initialize pygame
 pygame.init()
