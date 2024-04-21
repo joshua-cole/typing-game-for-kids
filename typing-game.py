@@ -1,5 +1,3 @@
-# Simple pygame program using the tutorial found at https://realpython.com/pygame-a-primer/
-
 # Import the pygame module
 import pygame
 
@@ -15,42 +13,39 @@ from pygame.locals import (
     QUIT,
 )
 
-# Initialize pygame
-pygame.init()
-
-# Establish screen size
-screenWidth = 800
-screenHeight = 600
-
-# Colors to be used
-white = (255,255,255)
-blue = (0,0,255)
-black = (0,0,0)
-
-# Set up the drawing window
-screen = pygame.display.set_mode((screenWidth, screenHeight))
+# Define constants for the screen width and height
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 
 # Define a player object by extending pygame.sprite.Sprite
-# The surface that is drawn on the screen is now an attribute of 'player'
+# The surface drawn on the screen is now an attribute of 'player'
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
         self.surf = pygame.Surface((75, 25))
-        self.surf.fill(white)
+        self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
+    # Move the sprite based on user keypresses
+    def update(self, pressed_keys):
+        if pressed_keys[K_UP]:
+            self.rect.move_ip(0, -5)
+        if pressed_keys[K_DOWN]:
+            self.rect.move_ip(0, 5)
+        if pressed_keys[K_LEFT]:
+            self.rect.move_ip(-5, 0)
+        if pressed_keys[K_RIGHT]:
+            self.rect.move_ip(5, 0)
 
-def update(self, pressed_keys):
-    if pressed_keys[K_UP]:
-        self.rect.move_ip(0, -5)
-    if pressed_keys[K_DOWN]:
-        self.rect.move_ip(0, 5)
-    if pressed_keys[K_LEFT]:
-        self.rect.move_ip(-5, 0)
-    if pressed_keys[K_RIGHT]:
-        self.rect.move_ip(5, 0)
+# Initialize pygame
+pygame.init()
 
-# Initiate player.  Right now, it's just a rectangle
+# Create the screen object
+# The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+# Instantiate player. Right now, this is just a rectangle.
 player = Player()
+
 # Variable to keep the main loop running
 running = True
 
@@ -66,21 +61,18 @@ while running:
         # Check for QUIT event. If QUIT, then set running to false.
         elif event.type == QUIT:
             running = False
-    
+
     # Get the set of keys pressed and check for user input
     pressed_keys = pygame.key.get_pressed()
 
     # Update the player sprite based on user keypresses
     player.update(pressed_keys)
 
-    # Fill the background with black
-    screen.fill(black)
+    # Fill the screen with black
+    screen.fill((0, 0, 0))
 
     # Draw the player on the screen
     screen.blit(player.surf, player.rect)
 
     # Update the display
     pygame.display.flip()
-
-# Done! Time to quit
-pygame.quit()
