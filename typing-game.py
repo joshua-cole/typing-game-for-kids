@@ -39,6 +39,16 @@ class Player(pygame.sprite.Sprite):
         self.surf.fill(white)
         self.rect = self.surf.get_rect()
 
+def update(self, pressed_keys):
+    if pressed_keys[K_UP]:
+        self.rect.move_ip(0, -5)
+    if pressed_keys[K_DOWN]:
+        self.rect.move_ip(0, 5)
+    if pressed_keys[K_LEFT]:
+        self.rect.move_ip(-5, 0)
+    if pressed_keys[K_RIGHT]:
+        self.rect.move_ip(5, 0)
+
 # Initiate player.  Right now, it's just a rectangle
 player = Player()
 # Variable to keep the main loop running
@@ -46,23 +56,30 @@ running = True
 
 # Main loop
 while running:
-    # Look at every event in the queue
+    # for loop through the event queue
     for event in pygame.event.get():
-        # Did the user hit a key?
+        # Check for KEYDOWN event
         if event.type == KEYDOWN:
-            # Was it the escape key?  If so, stop the loop.
+            # If the Esc key is pressed, then exit the main loop
             if event.key == K_ESCAPE:
                 running = False
-
-        # Did the user click the window close button?  If so, stop the loop.
-        if event.type == pygame.QUIT:
+        # Check for QUIT event. If QUIT, then set running to false.
+        elif event.type == QUIT:
             running = False
     
+    # Get the set of keys pressed and check for user input
+    pressed_keys = pygame.key.get_pressed()
+
+    # Update the player sprite based on user keypresses
+    player.update(pressed_keys)
+
     # Fill the background with black
     screen.fill(black)
 
     # Draw the player on the screen
-    screen.blit(player.surf, (screenWidth/2,screenHeight/2))
+    screen.blit(player.surf, player.rect)
+
+    # Update the display
     pygame.display.flip()
 
 # Done! Time to quit
