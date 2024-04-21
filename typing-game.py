@@ -1,4 +1,4 @@
-# Simple pygame program
+# Simple pygame program using the tutorial found at https://realpython.com/pygame-a-primer/
 
 # Import the pygame module
 import pygame
