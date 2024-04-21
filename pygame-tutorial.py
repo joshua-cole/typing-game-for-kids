@@ -28,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.surf = pygame.Surface((75, 25))
         self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect()
+
     # Move the sprite based on user keypresses
     def update(self, pressed_keys):
         if pressed_keys[K_UP]:
@@ -52,16 +53,16 @@ class Player(pygame.sprite.Sprite):
 # Initialize pygame
 pygame.init()
 
-# Define the enemy object by extend pygame.sprite.Sprite
+# Define the enemy object by extending pygame.sprite.Sprite
 # The surface you draw on the screen is now an attribute of 'enemy'
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy, self).__init__()
-        self.surf = pygame.surface((20, 10))
-        self.surf.fill ((255, 255, 255))
+        self.surf = pygame.Surface((20, 10))
+        self.surf.fill((255, 255, 255))
         self.rect = self.surf.get_rect(
             center=(
-                random.randint(SCREEN_WIDTH + 20, SCREEN_HEIGHT + 100),
+                random.randint(SCREEN_WIDTH + 20, SCREEN_WIDTH + 100),
                 random.randint(0, SCREEN_HEIGHT),
             )
         )
@@ -72,41 +73,63 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
-            self.kill() 
+            self.kill()
+
 # Create the screen object
 # The size is determined by the constant SCREEN_WIDTH and SCREEN_HEIGHT
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+# Create a custom event for adding a new enemy
+ADDENEMY = pygame.USEREVENT + 1
+pygame.time.set_timer(ADDENEMY, 250)
+
 # Instantiate player. Right now, this is just a rectangle.
 player = Player()
+
+# Create groups to hold enemy sprites and all sprites
+# - enemies is used for collision detection and position updates
+# - all_sprites is used for rendering
+enemies = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
+all_sprites.add(player)
 
 # Variable to keep the main loop running
 running = True
 
 # Main loop
 while running:
-    # for loop through the event queue
+    # Look at every event in the queue
     for event in pygame.event.get():
-        # Check for KEYDOWN event
+        # Did the user hit a key?
         if event.type == KEYDOWN:
-            # If the Esc key is pressed, then exit the main loop
+            # Was it the Escape key? If so, stop the loop.
             if event.key == K_ESCAPE:
                 running = False
-        # Check for QUIT event. If QUIT, then set running to false.
+
+        # Did the user click the window close button? If so, stop the loop.
         elif event.type == QUIT:
             running = False
 
+        # Add a new enemy?
+        elif event.type == ADDENEMY:
+            # Create the new enemy and add it to sprite groups
+            new_enemy = Enemy()
+            enemies.add(new_enemy)
+            all_sprites.add(new_enemy)
+
     # Get the set of keys pressed and check for user input
     pressed_keys = pygame.key.get_pressed()
-
-    # Update the player sprite based on user keypresses
     player.update(pressed_keys)
+
+    # Update enemy position
+    enemies.update()
 
     # Fill the screen with black
     screen.fill((0, 0, 0))
 
-    # Draw the player on the screen
-    screen.blit(player.surf, player.rect)
+    # Draw all sprites
+    for entity in all_sprites:
+        screen.blit(entity.surf, entity.rect)
 
     # Update the display
     pygame.display.flip()
