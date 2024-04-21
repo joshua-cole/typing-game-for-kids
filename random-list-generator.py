@@ -1,6 +1,5 @@
 import random
 import numpy as np
-import pygame
 
 roll = 0
 results = []
